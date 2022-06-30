@@ -1,6 +1,6 @@
-package br.com.devdojo.repository;
+package br.com.devdojo.anime.aplication.repository;
 
-import br.com.devdojo.domain.Anime;
+import br.com.devdojo.anime.domain.Anime;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

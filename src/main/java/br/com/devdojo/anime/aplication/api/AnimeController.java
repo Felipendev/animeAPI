@@ -1,9 +1,8 @@
-package br.com.devdojo.aplication.api;
+package br.com.devdojo.anime.aplication.api;
 
-import br.com.devdojo.domain.Anime;
+import br.com.devdojo.anime.domain.Anime;
 import br.com.devdojo.exception.AnimeNotFoundException;
-import br.com.devdojo.service.AnimeService;
-import lombok.AllArgsConstructor;
+import br.com.devdojo.anime.aplication.service.AnimeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Table;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,9 +44,9 @@ public class AnimeController {
     }
 
     @PostMapping
-    public ResponseEntity<Anime> save( @RequestBody Anime anime) {
+    public ResponseEntity<Anime> save( @RequestBody AnimeRequest animeRequest) {
         log.info("[Inicia] AnimeController - save");
-        ResponseEntity<Anime> savedAnime = new ResponseEntity<>(animeService.save(anime), HttpStatus.CREATED);
+        ResponseEntity<Anime> savedAnime = new ResponseEntity<>(animeService.save(animeRequest), HttpStatus.CREATED);
         log.info("[Finaliza] AnimeController - save");
         return savedAnime;
     }

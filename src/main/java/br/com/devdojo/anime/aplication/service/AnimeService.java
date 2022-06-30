@@ -1,14 +1,13 @@
-package br.com.devdojo.service;
+package br.com.devdojo.anime.aplication.service;
 
-import br.com.devdojo.domain.Anime;
+import br.com.devdojo.anime.aplication.api.AnimeRequest;
+import br.com.devdojo.anime.domain.Anime;
 import br.com.devdojo.exception.AnimeNotFoundException;
-import br.com.devdojo.repository.AnimeRepository;
-import lombok.AllArgsConstructor;
+import br.com.devdojo.anime.aplication.repository.AnimeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,22 +29,31 @@ public class AnimeService {
 
     public Optional<Anime> findById(@PathVariable UUID animeId) throws AnimeNotFoundException {
         log.info("[Inicia] AnimeService - findById");
+        verificaSeExiste(animeId);
         Optional<Anime> findById = animeRepository.findById(animeId);
         log.info("[Finaliza] AnimeService - findById");
-        return Optional.of(findById.orElseThrow(() -> new AnimeNotFoundException(animeId)));
+        return findById;
     }
 
-    public Anime save(Anime anime) {
+    public Anime save(AnimeRequest animeRequest) {
         log.info("[Inicia] AnimeService - save");
-        Anime animeSaved = animeRepository.save(anime);
+        Anime animeSaved = animeRepository.save(Anime.builder().name(animeRequest.getName()).build());
         log.info("[Finaliza] AnimeService - save");
         return animeSaved;
     }
 
     public void delete(@PathVariable UUID animeId) throws AnimeNotFoundException {
         log.info("[Inicia] AnimeService - delete");
+        verificaSeExiste(animeId);
         animeRepository.deleteById(animeId);
         log.info("[Finaliza] AnimeService - delete");
+    }
+
+    private Anime verificaSeExiste(UUID animeId) throws AnimeNotFoundException {
+        log.info("[Inicio] AnimeService - verificaSeExiste");
+        Anime anime = animeRepository.findById(animeId).orElseThrow(() -> new AnimeNotFoundException(animeId));
+        log.info("[Finaliza] AnimeService - verificaSeExiste");
+        return anime;
     }
 
 //    public Anime update(UUID id, Anime anime) {
