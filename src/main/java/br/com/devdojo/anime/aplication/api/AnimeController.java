@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Table;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,20 +45,20 @@ public class AnimeController {
     }
 
     @PostMapping
-    public ResponseEntity<Anime> save( @RequestBody AnimeRequest animeRequest) {
+    public ResponseEntity<Anime> save( @RequestBody @Valid AnimeRequest animeRequest) {
         log.info("[Inicia] AnimeController - save");
         ResponseEntity<Anime> savedAnime = new ResponseEntity<>(animeService.save(animeRequest), HttpStatus.CREATED);
         log.info("[Finaliza] AnimeController - save");
         return savedAnime;
     }
 
-//    @PutMapping
-//    public Anime update(@RequestBody Anime anime) {
-//        log.info("[Inicia] AnimeController - save");
-//        Anime animeUpdated = animeService.update(anime);
-//        log.info("[Finaliza] AnimeController - save");
-//        return animeUpdated;
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@RequestBody AnimeRequest animeRequest) throws AnimeNotFoundException {
+        log.info("[Inicia] AnimeController - save");
+        animeService.update(animeRequest);
+        log.info("[Finaliza] AnimeController - save");
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,7 +37,7 @@ public class AnimeService {
         return findById;
     }
 
-    public Anime save(AnimeRequest animeRequest) {
+    public Anime save(@RequestBody  @Valid AnimeRequest animeRequest) {
         log.info("[Inicia] AnimeService - save");
         Anime animeSaved = animeRepository.save(Anime.builder().name(animeRequest.getName()).build());
         log.info("[Finaliza] AnimeService - save");
@@ -56,9 +58,13 @@ public class AnimeService {
         return anime;
     }
 
-//    public Anime update(UUID id, Anime anime) {
-//        Optional<Anime> animePorId = animeRepository.findById( );
-//        animePorId = animeRepository.delete(anime);
-//        return updateAnime;
-//    }
+    public void update(AnimeRequest animeRequest) throws AnimeNotFoundException {
+        verificaSeExiste(animeRequest.getId());
+        Optional<Anime> savedAnime = animeRepository.findById(animeRequest.getId());
+        Anime anime = Anime.builder()
+                .id(savedAnime.get().getId())
+                .name(animeRequest.getName())
+                .build();
+         animeRepository.save(anime);
+        }
 }
